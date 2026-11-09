@@ -47,6 +47,9 @@ function App(): JSX.Element {
           const arrayBuffer = await audioBlob.arrayBuffer();
           const audioBytes = new Uint8Array(arrayBuffer);
 
+          console.log("window.api =", (window as any).api);
+          console.log("userAgent =", navigator.userAgent);
+
           // Call Electron main via preload
           const result = await window.api.transcribeAudio({
             bytes: audioBytes,
@@ -58,6 +61,7 @@ function App(): JSX.Element {
           // Later: call your LLM summarizer on `result.transcript`
           // For now, just drop it into notes or keep your simulated notes.
           setNotes(`Transcript:\n${result.transcript}`);
+          console.log(notes)
           setStatus("Ready");
         } catch (err) {
           console.error(err);
@@ -121,9 +125,8 @@ function App(): JSX.Element {
 
             <button
               onClick={handleListenToggle}
-              className={`px-6 py-3 rounded-xl font-medium text-white transition ${
-                listening ? "bg-red-600 hover:bg-red-700" : "bg-blue-600 hover:bg-blue-700"
-              }`}
+              className={`px-6 py-3 rounded-xl font-medium text-white transition ${listening ? "bg-red-600 hover:bg-red-700" : "bg-blue-600 hover:bg-blue-700"
+                }`}
             >
               {listening ? "Stop Listening" : "Start Listening"}
             </button>
@@ -152,9 +155,8 @@ function App(): JSX.Element {
             <button
               onClick={handleCopy}
               disabled={!notes}
-              className={`px-4 py-2 rounded-lg text-white text-sm transition ${
-                copied ? "bg-green-700" : "bg-green-600 hover:bg-green-700"
-              } ${!notes ? "opacity-50 cursor-not-allowed" : ""}`}
+              className={`px-4 py-2 rounded-lg text-white text-sm transition ${copied ? "bg-green-700" : "bg-green-600 hover:bg-green-700"
+                } ${!notes ? "opacity-50 cursor-not-allowed" : ""}`}
               aria-live="polite"
             >
               {copied ? "Copied ✓" : "Copy"}
